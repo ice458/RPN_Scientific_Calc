@@ -5,4 +5,5 @@
 !*.kicad_sch
 !*.kicad_sym
 !*.pdf
+!BOM.csv
 !top_board
