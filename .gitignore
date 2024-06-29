@@ -1,0 +1,9 @@
+*.X/nbproject/Makefile-*
+*.X/nbproject/Package-default.bash
+*.X/nbproject/private
+*.X/defmplabxtrace*
+*.X/mcc-manifest*
+*.X/build
+*.X/debug
+*.X/dist
+*.X/.generated_files
