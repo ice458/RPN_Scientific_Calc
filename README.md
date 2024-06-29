@@ -1,5 +1,6 @@
 # RPN Scientific Calculator
 RPN Scientific Calculator with PIC32CM2532LE00048.  
+Reverse Polish notation with 4-element stack.  
 This calculator uses a proprietary decimal floating point library to perform calculations.  
 This project was created using MPLAB X IDE v6.20, XC32 v4.35, and MCC v5.50.  
 For more information, please visit [this site.](https://ice458.wordpress.com/rpn%e9%96%a2%e6%95%b0%e9%9b%bb%e5%8d%93/)
