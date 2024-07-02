@@ -844,8 +844,10 @@ int main(void)
         case KSWAP:
             if (shift == true)
             {
-                push_flag = false;
-                stack_push();
+                if(push_flag == true)
+                {
+                    stack_push();
+                }
                 for (uint8_t i = 0; i < max_inputval_length; i++)
                 {
                     inputval[i] = '\0';
