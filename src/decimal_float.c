@@ -510,6 +510,10 @@ void df_add(df_t *a, df_t *b, df_t *result)
             result->exponent = smaller.exponent;
         }
     }
+    if (df_is_zero(result))
+    {
+        result->sign = 0;
+    }
 }
 
 // a-b
