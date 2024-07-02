@@ -749,7 +749,7 @@ void df_cbrt(df_t *a, df_t *result)
 // nth_root(a, n)
 void df_nth_root(df_t *a, df_t *n, df_t *result)
 {
-    if (a->sign)
+    if (a->sign || df_is_zero(n))
     {
         df_error(result);
         return;
