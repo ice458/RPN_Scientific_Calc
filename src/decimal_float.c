@@ -998,6 +998,11 @@ void df_log10(df_t *x, df_t *result)
 // logx(y)
 void df_log(df_t *x, df_t *y, df_t *result)
 {
+    if (x->sign || y->sign)
+    {
+        df_error(result);
+        return;
+    }
     df_t lnx, lny;
     df_ln(x, &lnx);
     df_ln(y, &lny);
