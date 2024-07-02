@@ -1048,6 +1048,9 @@ void df_sin(df_t *a, df_t *result)
         df_deg_to_rad(&a_tmp, &a_tmp);
     }
 
+    df_t one = {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 0};
+    df_t mone = {1, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 0};
+
     pi = df_pi();
     df_t m_pi = {1, {9, 5, 3, 5, 6, 2, 9, 5, 1, 4, 1, 3}, 0};
     df_t pi2 = {0, {8, 1, 7, 0, 3, 5, 8, 1, 3, 8, 2, 6}, 0};
@@ -1117,6 +1120,16 @@ void df_sin(df_t *a, df_t *result)
     {
         tmp2.sign = 0;
     }
+
+    if (df_compare(&tmp2, &one) > 0)
+    {
+        tmp2 = one;
+    }
+    if (df_compare(&tmp2, &mone) < 0)
+    {
+        tmp2 = mone;
+    }
+
     *result = tmp2;
 }
 
@@ -1151,11 +1164,6 @@ void df_tan(df_t *a, df_t *result)
 
     df_sin(&a_tmp, &tmp);
     df_cos(&a_tmp, &tmp2);
-    if (df_is_zero(&tmp2))
-    {
-        df_error(result);
-        return;
-    }
     df_div(&tmp, &tmp2, &tmp3);
     *result = tmp3;
 }
