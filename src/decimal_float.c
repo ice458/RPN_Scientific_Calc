@@ -1308,7 +1308,7 @@ void df_round(df_t *a, df_t *result)
         result->mantissa[0] = 0;
         result->mantissa[1] = 0;
 
-        for (int8_t i = 2; i < DECIMAL_FLOAT_MANTISSA_SIZE - 1; i++)
+        for (int8_t i = 2; i < DECIMAL_FLOAT_MANTISSA_SIZE; i++)
         {
             if (result->mantissa[i] >= 10)
             {
