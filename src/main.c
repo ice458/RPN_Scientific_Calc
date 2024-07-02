@@ -1221,7 +1221,6 @@ int main(void)
                 mode_flag = true;
                 disp_flag = false;
                 shift = false;
-                inputval_len = 0;
             }
             else
             {
@@ -1234,7 +1233,6 @@ int main(void)
                 disp_flag = true;
                 mode_flag = false;
                 shift = false;
-                inputval_len = 0;
             }
             else
             {
