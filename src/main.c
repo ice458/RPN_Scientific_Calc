@@ -308,6 +308,7 @@ int main(void)
     POWER_EN_Set();
 
     // オートパワーセーブ用タイマ設定
+    // 割り込み周期 600,000msec (10min)
     TC0_TimerCallbackRegister(pdown, (uintptr_t)NULL);
     TC0_TimerStart();
 
@@ -355,6 +356,7 @@ int main(void)
     df_t tmp;
     // 直前のXレジスタの値
     df_t last_x;
+    int_to_df(0, &last_x);
     // モード設定表示フラグ
     bool mode_flag = false;
     // 表示設定表示フラグ

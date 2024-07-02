@@ -84,7 +84,8 @@ uint8_t key_read() {
     return key;
 }
 
-void init_sw() {
+void init_sw(){
+    // スイッチ読み取り割り込み 周期10msec
     TC2_TimerCallbackRegister(dynamic, (uintptr_t) NULL);
     TC2_TimerStart();
 }

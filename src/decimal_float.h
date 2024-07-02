@@ -25,7 +25,7 @@ typedef struct
 typedef enum
 {
     DF_STRING_MODE_ENGINEERING, // 指数表示
-    DF_STRING_MODE_SCIENTIFIC // 科学表示
+    DF_STRING_MODE_SCIENTIFIC   // 科学表示
 } df_string_mode_t;
 
 // 角度モード
@@ -40,7 +40,6 @@ int16_t pow_int(int16_t x, int16_t n);
 // 交換
 void df_swap(df_t *a, df_t *b);
 // 浮動小数点数から10進浮動小数点数への変換
-// 単精度を使っているので、精度はよろしくない
 void double_to_df(double f, df_t *a);
 // 整数から10進浮動小数点数への変換
 void int_to_df(int16_t value, df_t *df);
