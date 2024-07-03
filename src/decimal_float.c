@@ -602,7 +602,7 @@ void df_mul(df_t *a, df_t *b, df_t *result)
 // a^n (nは整数)
 void df_pow_int(df_t *a, int16_t n, df_t *result)
 {
-    df_t tmp = {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 0};
+    df_t tmp = DF_1;
     for (int16_t i = 0; i < n; i++)
     {
         df_mul(&tmp, a, &tmp);
@@ -613,9 +613,9 @@ void df_pow_int(df_t *a, int16_t n, df_t *result)
 // a!
 void df_factorial(df_t *a, df_t *result)
 {
-    df_t i_df = {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 0};
-    df_t tmp = {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 0};
-    df_t one = {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 0};
+    df_t i_df = DF_1;
+    df_t tmp = DF_1;
+    df_t one = DF_1;
 
     for (; df_compare(&i_df, a) <= 0; df_add(&i_df, &one, &i_df))
     {
@@ -635,8 +635,8 @@ void df_inv(df_t *a, df_t *result)
     df_t n, tmp;
     double a_f;
     df_to_double(a, &a_f);
-    df_t one = {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 0};
-    df_t two = {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2}, 0};
+    df_t one = DF_1;
+    df_t two = DF_2;
 
     // 初期値の設定
     double_to_df(1.0 / a_f, &n);
@@ -1053,14 +1053,16 @@ void df_sin(df_t *a, df_t *result)
         df_deg_to_rad(&a_tmp, &a_tmp);
     }
 
-    df_t one = {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 0};
-    df_t mone = {1, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 0};
+    df_t one = DF_1;
+    df_t mone = DF_m1;
 
     pi = df_pi();
-    df_t m_pi = {1, {9, 5, 3, 5, 6, 2, 9, 5, 1, 4, 1, 3}, 0};
-    df_t pi2 = {0, {8, 1, 7, 0, 3, 5, 8, 1, 3, 8, 2, 6}, 0};
-    df_t pi_2 = {0, {9, 7, 6, 2, 3, 6, 9, 7, 0, 7, 5, 1}, 0};
-    df_t m_pi_2 = {1, {9, 7, 6, 2, 3, 6, 9, 7, 0, 7, 5, 1}, 0};
+    df_t m_pi = pi;
+    m_pi.sign = 1;
+    df_t pi2 = DF_2PI;
+    df_t pi_2 = DF_PId2;
+    df_t m_pi_2 = pi_2;
+    m_pi_2.sign = 1;
 
     // radの周期性を利用して範囲を狭める
     df_mod(&a_tmp, &pi2, &a_tmp);
@@ -1090,18 +1092,18 @@ void df_sin(df_t *a, df_t *result)
 
     // 1/(2i+1)!
     df_t c0[17] = {
-        {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 0},
-        {0, {7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1}, -1},
-        {0, {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 8}, -3},
-        {0, {3, 1, 4, 8, 9, 6, 2, 1, 4, 8, 9, 1}, -4},
-        {0, {0, 4, 2, 2, 9, 1, 3, 7, 5, 5, 7, 2}, -6},
-        {0, {4, 5, 8, 3, 8, 0, 1, 2, 5, 0, 5, 2}, -8},
-        {0, {8, 6, 3, 8, 3, 4, 0, 9, 5, 0, 6, 1}, -10},
-        {0, {2, 8, 1, 3, 7, 3, 6, 1, 7, 4, 6, 7}, -13},
-        {0, {5, 3, 4, 5, 2, 7, 5, 4, 1, 1, 8, 2}, -15},
-        {0, {2, 6, 6, 4, 2, 5, 3, 6, 0, 2, 2, 8}, -18}};
+        {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 0},
+        {0, {7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1}, -1},
+        {0, {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 8}, -3},
+        {0, {3, 1, 4, 8, 9, 6, 2, 1, 4, 8, 9, 6, 2, 1, 4, 8, 9, 1}, -4},
+        {0, {7, 0, 9, 8, 5, 8, 9, 3, 2, 2, 9, 1, 3, 7, 5, 5, 7, 2}, -6},
+        {0, {8, 8, 1, 7, 1, 4, 4, 5, 8, 3, 8, 0, 1, 2, 5, 0, 5, 2}, -8},
+        {0, {6, 4, 1, 6, 1, 2, 8, 6, 3, 8, 3, 4, 0, 9, 5, 0, 6, 1}, -10},
+        {0, {8, 4, 6, 1, 8, 9, 1, 8, 1, 3, 7, 3, 6, 1, 7, 4, 6, 7}, -13},
+        {0, {6, 7, 0, 2, 5, 5, 4, 3, 4, 5, 2, 7, 5, 4, 1, 1, 8, 2}, -15},
+        {0, {2, 7, 9, 2, 3, 4, 2, 6, 6, 4, 2, 5, 3, 6, 0, 2, 2, 8}, -18}};
 
-    for (uint8_t i = 0; i < loop; i++)
+    for (int8_t i = 0; i < loop; i++)
     {
         df_pow_int(&a_tmp, 2 * i + 1, &tmp); // a^(2i+1)
         df_mul(&tmp, &c0[i], &tmp);          // a^(2i+1)/(2i+1)!
@@ -1134,8 +1136,8 @@ void df_sin(df_t *a, df_t *result)
 // cos(a)
 void df_cos(df_t *a, df_t *result)
 {
-    df_t pi_2 = {0, {9, 7, 6, 2, 3, 6, 9, 7, 0, 7, 5, 1}, 0};
-    df_t right_angle = {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9}, 1};
+    df_t pi_2 = DF_PId2;
+    df_t right_angle = {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9}, 1};
     df_t a_tmp = *a;
     if (get_df_angle_mode() == DF_ANGLE_MODE_DEG)
     {
@@ -1171,8 +1173,8 @@ void df_asin(df_t *a, df_t *result)
 {
     double x_f;
     df_t y;
-    df_t minus_one = {1, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 0};
-    df_t one = {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 0};
+    df_t minus_one = DF_m1;
+    df_t one = DF_1;
 
     if (df_compare(a, &minus_one) < 0 || df_compare(a, &one) > 0)
     {
@@ -1194,8 +1196,8 @@ void df_acos(df_t *a, df_t *result)
 {
     double x_f;
     df_t y;
-    df_t minus_one = {1, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 0};
-    df_t one = {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 0};
+    df_t minus_one = DF_m1;
+    df_t one = DF_1;
 
     if (df_compare(a, &minus_one) < 0 || df_compare(a, &one) > 0)
     {
@@ -1229,7 +1231,7 @@ void df_atan(df_t *a, df_t *result)
 // pi
 df_t df_pi()
 {
-    df_t pi = {0, {9, 5, 3, 5, 6, 2, 9, 5, 1, 4, 1, 3}, 0};
+    df_t pi = DF_PI;
 
     return pi;
 }
@@ -1240,7 +1242,7 @@ void df_deg_to_rad(df_t *deg, df_t *result)
     df_t tmp, pi;
     tmp = *deg;
     pi = df_pi();
-    df_t one_eighty = {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 1}, 2};
+    df_t one_eighty = {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 1}, 2};
     df_div(&tmp, &one_eighty, &tmp);
     df_mul(&tmp, &pi, result);
 }
@@ -1250,7 +1252,7 @@ void df_rad_to_deg(df_t *rad, df_t *result)
 {
     df_t tmp, pi;
     pi = df_pi();
-    df_t one_eighty = {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 1}, 2};
+    df_t one_eighty = {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 1}, 2};
     df_div(rad, &pi, &tmp);
     df_mul(&tmp, &one_eighty, result);
 }
@@ -1258,13 +1260,7 @@ void df_rad_to_deg(df_t *rad, df_t *result)
 // e
 df_t df_e()
 {
-    static bool init_flag = false;
-    static df_t e;
-    if (init_flag == false)
-    {
-        init_flag = true;
-        string_to_df("2.71828182846e0", &e);
-    }
+    df_t e = DF_E;
     return e;
 }
 
@@ -1281,7 +1277,7 @@ void df_mul_over_sum(df_t *a, df_t *b, df_t *result)
 void df_fc_rc(df_t *r, df_t *c, df_t *result)
 {
     df_t tmp, pi;
-    df_t two = {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2}, 0};
+    df_t two = DF_2;
     pi = df_pi();
     df_mul(r, c, &tmp);
     df_mul(&tmp, &two, &tmp);
@@ -1293,7 +1289,7 @@ void df_fc_rc(df_t *r, df_t *c, df_t *result)
 void df_fc_lc(df_t *l, df_t *c, df_t *result)
 {
     df_t tmp, pi;
-    df_t two = {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2}, 0};
+    df_t two = DF_2;
     pi = df_pi();
     df_mul(l, c, &tmp);
     df_sqrt(&tmp, &tmp);
@@ -1302,7 +1298,7 @@ void df_fc_lc(df_t *l, df_t *c, df_t *result)
     df_inv(&tmp, result);
 }
 
-// 指定した桁で四捨五入
+// 11桁目を四捨五入
 void df_round(df_t *a, df_t *result)
 {
     *result = *a;
@@ -1313,7 +1309,7 @@ void df_round(df_t *a, df_t *result)
         result->mantissa[0] = 0;
         result->mantissa[1] = 0;
 
-        for (int8_t i = 2; i < DECIMAL_FLOAT_MANTISSA_SIZE; i++)
+        for (int8_t i = DECIMAL_FLOAT_MANTISSA_SIZE - DECIMAL_FLOAT_DISPLAY_DIGIT; i < DECIMAL_FLOAT_MANTISSA_SIZE; i++)
         {
             if (result->mantissa[i] >= 10)
             {
@@ -1368,7 +1364,7 @@ void df_to_string(df_t *a, char *str)
     {
         str[i++] = a->mantissa[DECIMAL_FLOAT_MANTISSA_SIZE - 1] + '0';
         str[i++] = '.';
-        for (int8_t j = DECIMAL_FLOAT_MANTISSA_SIZE - 2; j >= 2; j--)
+        for (int8_t j = DECIMAL_FLOAT_MANTISSA_SIZE - 2; j >= DECIMAL_FLOAT_MANTISSA_SIZE - DECIMAL_FLOAT_DISPLAY_DIGIT; j--)
         {
             str[i++] = a->mantissa[j] + '0';
         }
@@ -1384,7 +1380,7 @@ void df_to_string(df_t *a, char *str)
         {
             str[i++] = a->mantissa[DECIMAL_FLOAT_MANTISSA_SIZE - 1] + '0';
             str[i++] = '.';
-            for (int8_t j = DECIMAL_FLOAT_MANTISSA_SIZE - 2; j >= 2; j--)
+            for (int8_t j = DECIMAL_FLOAT_MANTISSA_SIZE - 2; j >= DECIMAL_FLOAT_MANTISSA_SIZE - DECIMAL_FLOAT_DISPLAY_DIGIT; j--)
             {
                 str[i++] = a->mantissa[j] + '0';
             }
@@ -1398,7 +1394,7 @@ void df_to_string(df_t *a, char *str)
             str[i++] = a->mantissa[DECIMAL_FLOAT_MANTISSA_SIZE - 1] + '0';
             str[i++] = a->mantissa[DECIMAL_FLOAT_MANTISSA_SIZE - 2] + '0';
             str[i++] = '.';
-            for (int8_t j = DECIMAL_FLOAT_MANTISSA_SIZE - 3; j >= 2; j--)
+            for (int8_t j = DECIMAL_FLOAT_MANTISSA_SIZE - 3; j >= DECIMAL_FLOAT_MANTISSA_SIZE - DECIMAL_FLOAT_DISPLAY_DIGIT; j--)
             {
                 str[i++] = a->mantissa[j] + '0';
             }
@@ -1413,7 +1409,7 @@ void df_to_string(df_t *a, char *str)
             str[i++] = a->mantissa[DECIMAL_FLOAT_MANTISSA_SIZE - 2] + '0';
             str[i++] = a->mantissa[DECIMAL_FLOAT_MANTISSA_SIZE - 3] + '0';
             str[i++] = '.';
-            for (int8_t j = DECIMAL_FLOAT_MANTISSA_SIZE - 4; j >= 2; j--)
+            for (int8_t j = DECIMAL_FLOAT_MANTISSA_SIZE - 4; j >= DECIMAL_FLOAT_MANTISSA_SIZE - DECIMAL_FLOAT_DISPLAY_DIGIT; j--)
             {
                 str[i++] = a->mantissa[j] + '0';
             }

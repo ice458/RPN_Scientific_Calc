@@ -8,14 +8,18 @@
 #include <string.h>
 #include <math.h>
 
-#define DECIMAL_FLOAT_MANTISSA_SIZE 12
+// 内部計算桁数
+#define DECIMAL_FLOAT_MANTISSA_SIZE 18
+// 表示桁数
+#define DECIMAL_FLOAT_DISPLAY_DIGIT 10
 
 // 10進浮動小数点数
 typedef struct
 {
-    //[0][1,0,0][0]→1.0E0
-    //[0][3,1,4][-1]→3.14E-1
-    //[1][3,1,4][2]→-3.14E2
+    // 例
+    // [0][1,0,0][0]→1.0E0
+    // [0][3,1,4][-1]→3.14E-1
+    // [1][3,1,4][2]→-3.14E2
     uint8_t sign;                                  // 符号
     uint8_t mantissa[DECIMAL_FLOAT_MANTISSA_SIZE]; // 仮数部
     int16_t exponent;                              // 指数部
@@ -31,9 +35,21 @@ typedef enum
 // 角度モード
 typedef enum
 {
-    DF_ANGLE_MODE_DEG,
-    DF_ANGLE_MODE_RAD
+    DF_ANGLE_MODE_DEG, // 度数法
+    DF_ANGLE_MODE_RAD  // 弧度法
 } df_angle_mode_t;
+
+#define DF_0  {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 0}
+#define DF_1  {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 0}
+#define DF_2  {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2}, 0}
+#define DF_m1 {1, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 0}
+#define DF_m2 {1, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2}, 0}
+
+#define DF_PI   {0, {4, 2, 3, 9, 7, 9, 8, 5, 3, 5, 6, 2, 9, 5, 1, 4, 1, 3}, 0}
+#define DF_2PI  {0, {8, 4, 6, 8, 5, 9, 7, 1, 7, 0, 3, 5, 8, 1, 3, 8, 2, 6}, 0}
+#define DF_PId2 {0, {2, 6, 6, 9, 8, 4, 9, 7, 6, 2, 3, 6, 9, 7, 0, 7, 5, 1}, 0}
+
+#define DF_E {0, {4, 2, 5, 4, 0, 9, 5, 4, 8, 2, 8, 1, 8, 2, 8, 1, 7, 2}, 0}
 
 // 整数の累乗
 int16_t pow_int(int16_t x, int16_t n);
