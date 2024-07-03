@@ -133,7 +133,7 @@ void df_mul_over_sum(df_t *a, df_t *b, df_t *result);
 void df_fc_rc(df_t *r, df_t *c, df_t *result);
 // fc(l,c)
 void df_fc_lc(df_t *l, df_t *c, df_t *result);
-// 11桁目で四捨五入
+// 表示桁数の一桁下で四捨五入
 void df_round(df_t *a, df_t *result);
 // 10進浮動小数点数の表示モードを設定
 void set_df_string_mode(df_string_mode_t mode);

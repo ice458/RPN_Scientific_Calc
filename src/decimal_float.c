@@ -1091,7 +1091,7 @@ void df_sin(df_t *a, df_t *result)
     int_to_df(0, &tmp2);
 
     // 1/(2i+1)!
-    df_t c0[17] = {
+    df_t c0[10] = {
         {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 0},
         {0, {7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1}, -1},
         {0, {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 8}, -3},
@@ -1188,8 +1188,70 @@ void df_asin(df_t *a, df_t *result)
     {
         df_rad_to_deg(&y, &y);
     }
+
     *result = y;
 }
+// void df_asin(df_t *a, df_t *result)
+// {
+//     const uint8_t loop = 9;
+//     df_t a_tmp, tmp, tmp2, term1, a_sq;
+//     a_tmp = *a;
+
+//     df_t minus_one = DF_m1;
+//     df_t one = DF_1;
+
+//     if (df_compare(&a_tmp, &minus_one) < 0 || df_compare(a, &one) > 0)
+//     {
+//         df_error(result);
+//         return;
+//     }
+
+//     df_mul(&a_tmp, &a_tmp, &a_sq);
+//     term1 = a_tmp;
+//     tmp = a_tmp;
+
+//     //(2*i-1)/(2 *i+ 1)
+//     df_t c0[10] = {
+//         {0, {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, -1},
+//         {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6}, -1},
+//         {0, {6, 8, 2, 4, 1, 7, 5, 8, 2, 4, 1, 7, 5, 8, 2, 4, 1, 7}, -1},
+//         {0, {8, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7}, -1},
+//         {0, {2, 8, 1, 8, 1, 8, 1, 8, 1, 8, 1, 8, 1, 8, 1, 8, 1, 8}, -1},
+//         {0, {4, 5, 1, 6, 4, 8, 3, 5, 1, 6, 4, 8, 3, 5, 1, 6, 4, 8}, -1},
+//         {0, {7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 8}, -1},
+//         {0, {8, 5, 1, 3, 6, 2, 5, 0, 1, 2, 4, 8, 6, 3, 7, 4, 9, 8}, -1},
+//         {0, {2, 6, 7, 4, 0, 9, 1, 6, 7, 4, 0, 9, 1, 6, 7, 4, 0, 9}, -1}};
+
+//     // 1/(2 *i+ 1)
+//     df_t c1[10] = {
+//         {0, {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, -1},
+//         {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2}, -1},
+//         {0, {7, 5, 8, 2, 4, 1, 7, 5, 8, 2, 4, 1, 7, 5, 8, 2, 4, 1}, -1},
+//         {0, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, -1},
+//         {0, {1, 9, 0, 9, 0, 9, 0, 9, 0, 9, 0, 9, 0, 9, 0, 9, 0, 9}, -2},
+//         {0, {1, 3, 2, 9, 6, 7, 0, 3, 2, 9, 6, 7, 0, 3, 2, 9, 6, 7}, -2},
+//         {0, {7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6}, -2},
+//         {0, {9, 5, 0, 7, 4, 6, 7, 1, 1, 4, 9, 2, 5, 3, 2, 8, 8, 5}, -2},
+//         {0, {1, 1, 2, 4, 8, 6, 3, 7, 4, 9, 8, 7, 5, 1, 3, 6, 2, 5}, -2}};
+
+//     for (int8_t i = 0; i < loop; i++)
+//     {
+//         df_mul(&a_sq, &c0[i], &tmp2);
+//         df_mul(&tmp2, &term1, &term1);
+//         df_mul(&term1, &c1[i], &tmp2);
+//         df_add(&tmp2, &tmp, &tmp);
+//     }
+
+//     if (get_df_angle_mode() == DF_ANGLE_MODE_DEG)
+//     {
+//         df_rad_to_deg(&tmp, &tmp);
+//     }
+
+//     if (df_is_zero(&tmp))
+//     {
+//         tmp.sign = 0;
+//     }
+// }
 
 // arccos(a)
 void df_acos(df_t *a, df_t *result)
@@ -1298,16 +1360,20 @@ void df_fc_lc(df_t *l, df_t *c, df_t *result)
     df_inv(&tmp, result);
 }
 
-// 11桁目を四捨五入
+// 表示桁数の一桁下で四捨五入
 void df_round(df_t *a, df_t *result)
 {
     *result = *a;
 
-    if (result->mantissa[1] >= 5)
+    if (result->mantissa[DECIMAL_FLOAT_MANTISSA_SIZE - DECIMAL_FLOAT_DISPLAY_DIGIT - 1] >= 5)
     {
-        result->mantissa[2]++;
+        result->mantissa[DECIMAL_FLOAT_MANTISSA_SIZE - DECIMAL_FLOAT_DISPLAY_DIGIT]++;
         result->mantissa[0] = 0;
         result->mantissa[1] = 0;
+        for (int8_t i = 0; i < DECIMAL_FLOAT_MANTISSA_SIZE - DECIMAL_FLOAT_DISPLAY_DIGIT; i++)
+        {
+            result->mantissa[i] = 0;
+        }
 
         for (int8_t i = DECIMAL_FLOAT_MANTISSA_SIZE - DECIMAL_FLOAT_DISPLAY_DIGIT; i < DECIMAL_FLOAT_MANTISSA_SIZE; i++)
         {
