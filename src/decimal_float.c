@@ -763,13 +763,6 @@ void df_nth_root(df_t *a, df_t *n, df_t *result)
 }
 
 // exp(x)
-// void df_exp(df_t *x, df_t *result)
-// {
-//     df_t y;
-//     df_t e = df_e();
-//     df_pow(&e, x, &y);
-//     *result = y;
-// }
 void df_exp(df_t *x, df_t *result)
 {
     const uint8_t loop = 30;
@@ -852,158 +845,177 @@ void df_exp(df_t *x, df_t *result)
 // ln(x)
 void df_ln(df_t *x, df_t *result)
 {
-    double x_f;
-    df_t y;
-    df_to_double(x, &x_f);
-    double_to_df(log(x_f), &y);
-    *result = y;
+    if (df_is_zero(x))
+    {
+        result->sign = 0;
+        result->exponent = 0;
+        for (int8_t i = 0; i < DECIMAL_FLOAT_MANTISSA_SIZE; i++)
+        {
+            result->mantissa[i] = 0;
+        }
+        return;
+    }
+    if (x->sign)
+    {
+        df_error(result);
+    }
+
+    const uint8_t loop = 30;
+    df_t xtmp;
+    xtmp = *x;
+    bool sub_flag = false;
+    df_t zero = DF_0;
+    df_t one = DF_1;
+    df_t two = DF_2;
+    df_t th = DF_05;
+    df_t th_rev = DF_2;
+    df_t tmp = DF_3;
+    df_t a = DF_1;
+    df_t lnth = DF_1;
+    df_t sum = DF_0;
+    df_t sumlnth = DF_0;
+
+    // 1/i
+    df_t c0[31] = {
+        {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 0},
+        {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 0},
+        {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5}, -1},
+        {0, {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, -1},
+        {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 2}, -1},
+        {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2}, -1},
+        {0, {7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1}, -1},
+        {0, {7, 5, 8, 2, 4, 1, 7, 5, 8, 2, 4, 1, 7, 5, 8, 2, 4, 1}, -1},
+        {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 2, 1}, -1},
+        {0, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, -1},
+        {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, -1},
+        {0, {1, 9, 0, 9, 0, 9, 0, 9, 0, 9, 0, 9, 0, 9, 0, 9, 0, 9}, -2},
+        {0, {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 8}, -2},
+        {0, {1, 3, 2, 9, 6, 7, 0, 3, 2, 9, 6, 7, 0, 3, 2, 9, 6, 7}, -2},
+        {0, {6, 8, 2, 4, 1, 7, 5, 8, 2, 4, 1, 7, 5, 8, 2, 4, 1, 7}, -2},
+        {0, {7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6}, -2},
+        {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 2, 6}, -2},
+        {0, {9, 5, 0, 7, 4, 6, 7, 1, 1, 4, 9, 2, 5, 3, 2, 8, 8, 5}, -2},
+        {0, {6, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5}, -2},
+        {0, {1, 1, 2, 4, 8, 6, 3, 7, 4, 9, 8, 7, 5, 1, 3, 6, 2, 5}, -2},
+        {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5}, -2},
+        {0, {0, 9, 1, 6, 7, 4, 0, 9, 1, 6, 7, 4, 0, 9, 1, 6, 7, 4}, -2},
+        {0, {5, 4, 5, 4, 5, 4, 5, 4, 5, 4, 5, 4, 5, 4, 5, 4, 5, 4}, -2},
+        {0, {4, 7, 1, 2, 5, 6, 5, 9, 6, 8, 0, 6, 2, 8, 7, 4, 3, 4}, -2},
+        {0, {7, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 1, 4}, -2},
+        {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4}, -2},
+        {0, {5, 1, 6, 4, 8, 3, 5, 1, 6, 4, 8, 3, 5, 1, 6, 4, 8, 3}, -2},
+        {0, {0, 7, 3, 0, 7, 3, 0, 7, 3, 0, 7, 3, 0, 7, 3, 0, 7, 3}, -2},
+        {0, {3, 4, 1, 7, 5, 8, 2, 4, 1, 7, 5, 8, 2, 4, 1, 7, 5, 3}, -2},
+        {0, {2, 5, 5, 6, 9, 8, 6, 0, 2, 6, 8, 5, 7, 2, 8, 4, 4, 3}, -2},
+        {0, {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3}, -2},
+    };
+
+    // 2以上で収束しないのでlnx=ln1/(1/x)=ln1-ln1/xを利用して計算する
+    if (df_compare(&xtmp, &two) >= 0)
+    {
+        sub_flag = true;
+        df_inv(&xtmp, &xtmp);
+    }
+
+    // 小さい値で収束が悪いので、ln(x)=ln(th*x/th)=ln(th)+ln(x/th)を利用して計算する
+    if (df_compare(&xtmp, &th) < 0)
+    {
+        // calc ln(th)
+        for (uint8_t i = 1; i < loop; i++)
+        {
+            df_sub(&th, &one, &tmp);
+            df_mul(&a, &tmp, &a);
+            df_mul(&a, &c0[i], &tmp);
+            if (i % 2 == 0)
+            {
+                df_sub(&sum, &tmp, &sum);
+            }
+            else
+            {
+                df_add(&sum, &tmp, &sum);
+            }
+        }
+        lnth = sum;
+        tmp = one;
+        a = one;
+        sum = zero;
+        while (df_compare(&xtmp, &th) < 0)
+        {
+            df_add(&lnth, &sumlnth, &sumlnth);
+            df_mul(&xtmp, &th_rev, &xtmp);
+        }
+        // calc ln(x/(th)^n)
+        for (uint8_t i = 1; i < loop; i++)
+        {
+            df_sub(&xtmp, &one, &tmp);
+            df_mul(&a, &tmp, &a);
+            df_mul(&a, &c0[i], &tmp);
+            if (i % 2 == 0)
+            {
+                df_sub(&sum, &tmp, &sum);
+            }
+            else
+            {
+                df_add(&sum, &tmp, &sum);
+            }
+        }
+        df_add(&sumlnth, &sum, &sum);
+        if (sub_flag)
+        {
+            sum.sign ^= sum.sign;
+        }
+        *result = sum;
+        return;
+    }
+
+    for (uint8_t i = 1; i < loop; i++)
+    {
+        df_sub(&xtmp, &one, &tmp);
+        df_mul(&a, &tmp, &a);
+        df_mul(&a, &c0[i], &tmp);
+        if (i % 2 == 0)
+        {
+            df_sub(&sum, &tmp, &sum);
+        }
+        else
+        {
+            df_add(&sum, &tmp, &sum);
+        }
+    }
+    if (sub_flag)
+    {
+        sum.sign ^= sum.sign;
+    }
+    *result = sum;
 }
-// void df_ln(df_t *x, df_t *result)
-// {
-//     if (df_is_zero(x))
-//     {
-//         result->sign = 0;
-//         result->exponent = 0;
-//         for (int8_t i = 0; i < DECIMAL_FLOAT_MANTISSA_SIZE; i++)
-//         {
-//             result->mantissa[i] = 0;
-//         }
-//         return;
-//     }
-//     if (x->sign)
-//     {
-//         result->sign = 1;
-//         result->exponent = 0;
-//         for (int8_t i = 0; i < DECIMAL_FLOAT_MANTISSA_SIZE; i++)
-//         {
-//             result->mantissa[i] = 0;
-//         }
-//         return;
-//     }
-
-//     const uint8_t loop = 30;
-//     df_t xtmp, i_df;
-//     xtmp = *x;
-//     bool sub_flag = false;
-//     df_t zero = {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 0};
-//     df_t one = {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 0};
-//     df_t two = {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2}, 0};
-//     df_t th = {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5}, -1};
-//     df_t tmp = {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3}, 0};
-//     df_t a = {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 0};
-//     df_t lnth = {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 0};
-//     df_t sum = {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 0};
-//     df_t sumlnth = {0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 0};
-
-//     // 2以上で収束しないのでlnx=ln1/(1/x)=ln1-ln1/xを利用して計算する
-//     if (df_compare(&xtmp, &two) >= 0)
-//     {
-//         sub_flag = true;
-//         df_inv(&xtmp, &xtmp);
-//     }
-
-//     // 小さい値で収束が悪いので、ln(x)=ln(th*x/th)=ln(th)+ln(x/th)を利用して計算する
-//     if (df_compare(&xtmp, &th) < 0)
-//     {
-//         // calc ln(th)
-//         for (uint8_t i = 1; i < loop; i++)
-//         {
-//             int_to_df(i, &i_df);
-//             df_sub(&th, &one, &tmp);
-//             df_mul(&a, &tmp, &a);
-//             df_div(&a, &i_df, &tmp);
-//             if (i % 2 == 0)
-//             {
-//                 df_sub(&sum, &tmp, &sum);
-//             }
-//             else
-//             {
-//                 df_add(&sum, &tmp, &sum);
-//             }
-//         }
-//         lnth = sum;
-//         tmp = one;
-//         a = one;
-//         sum = zero;
-//         while (df_compare(&xtmp, &th) < 0)
-//         {
-//             df_add(&lnth, &sumlnth, &sumlnth);
-//             df_div(&xtmp, &th, &xtmp);
-//         }
-//         // calc ln(x/(th)^n)
-//         for (uint8_t i = 1; i < loop; i++)
-//         {
-//             int_to_df(i, &i_df);
-//             df_sub(&xtmp, &one, &tmp);
-//             df_mul(&a, &tmp, &a);
-//             df_div(&a, &i_df, &tmp);
-//             if (i % 2 == 0)
-//             {
-//                 df_sub(&sum, &tmp, &sum);
-//             }
-//             else
-//             {
-//                 df_add(&sum, &tmp, &sum);
-//             }
-//         }
-//         df_add(&sumlnth, &sum, &sum);
-//         if (sub_flag)
-//         {
-//             sum.sign ^= sum.sign;
-//         }
-//         *result = sum;
-//         return;
-//     }
-
-//     for (uint8_t i = 1; i < loop; i++)
-//     {
-//         int_to_df(i, &i_df);
-//         df_sub(&xtmp, &one, &tmp);
-//         df_mul(&a, &tmp, &a);
-//         df_div(&a, &i_df, &tmp);
-//         if (i % 2 == 0)
-//         {
-//             df_sub(&sum, &tmp, &sum);
-//         }
-//         else
-//         {
-//             df_add(&sum, &tmp, &sum);
-//         }
-//     }
-//     if (sub_flag)
-//     {
-//         sum.sign ^= sum.sign;
-//     }
-//     *result = sum;
-// }
 
 // log10(x)
 void df_log10(df_t *x, df_t *result)
 {
-    double x_f;
-    df_t y;
-    df_to_double(x, &x_f);
-    double_to_df(log10(x_f), &y);
-    *result = y;
+    df_t tmp;
+    df_t ten = DF_10;
+    static df_t ln10inv;
+    bool isfirst = true;
+    if (x->sign)
+    {
+        result->sign = 1;
+        result->exponent = 0;
+        for (int8_t i = 0; i < DECIMAL_FLOAT_MANTISSA_SIZE; i++)
+        {
+            result->mantissa[i] = 0;
+        }
+        return;
+    }
+
+    if (isfirst)
+    {
+        df_ln(&ten, &ln10inv);
+        df_inv(&ln10inv, &ln10inv);
+        isfirst = false;
+    }
+    df_ln(x, &tmp);
+    df_mul(&tmp, &ln10inv, result);
 }
-// void df_log10(df_t *x, df_t *result)
-// {
-//     df_t tmp, ln10;
-//     if (x->sign)
-//     {
-//         result->sign = 1;
-//         result->exponent = 0;
-//         for (int8_t i = 0; i < DECIMAL_FLOAT_MANTISSA_SIZE; i++)
-//         {
-//             result->mantissa[i] = 0;
-//         }
-//         return;
-//     }
-//     df_t ten={0, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, 1};
-//     df_ln(&ten, &ln10);
-//     df_ln(x, &tmp);
-//     df_div(&tmp, &ln10, result);
-// }
 
 // logx(y)
 void df_log(df_t *x, df_t *y, df_t *result)
