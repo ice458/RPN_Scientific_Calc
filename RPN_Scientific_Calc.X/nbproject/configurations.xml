@@ -241,7 +241,7 @@
         <targetDevice>PIC32CM2532LE00048</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>pk4hybrid</platformTool>
+        <platformTool>noID</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>4.35</languageToolchainVersion>
         <platform>3</platform>
