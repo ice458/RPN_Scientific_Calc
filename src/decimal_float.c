@@ -33,6 +33,17 @@ void df_swap(df_t *a, df_t *b)
 // 浮動小数点数から10進浮動小数点数への変換
 void double_to_df(double f, df_t *a)
 {
+    if (f == 0)
+    {
+        a->sign = 0;
+        a->exponent = 0;
+        for (int8_t i = 0; i < DECIMAL_FLOAT_MANTISSA_SIZE; i++)
+        {
+            a->mantissa[i] = 0;
+        }
+        return;
+    }
+
     a->sign = f < 0 ? 1 : 0;
     f = f < 0 ? -f : f;
     a->exponent = 0;
@@ -696,6 +707,12 @@ void df_sqrt(df_t *a, df_t *result)
         df_error(result);
         return;
     }
+    if (df_is_zero(a))
+    {
+        int_to_df(0, result);
+        return;
+    }
+
     df_t n, tmp, tree, point_five;
     double a_f;
     df_to_double(a, &a_f);
@@ -734,15 +751,22 @@ void df_sqrt(df_t *a, df_t *result)
 // cube_root(a)
 void df_cbrt(df_t *a, df_t *result)
 {
-    if (a->sign)
+    df_t x;
+    x = *a;
+    bool inv_flag = false;
+    if (x.sign)
     {
-        df_error(result);
-        return;
+        inv_flag = true;
+        x.sign = 0;
     }
     double x_f;
     df_t y;
-    df_to_double(a, &x_f);
+    df_to_double(&x, &x_f);
     double_to_df(pow(x_f, 1.0 / 3.0), &y);
+    if (inv_flag)
+    {
+        y.sign = 1;
+    }
     *result = y;
 }
 
@@ -1034,11 +1058,17 @@ void df_log(df_t *x, df_t *y, df_t *result)
 // a^b
 void df_pow(df_t *a, df_t *b, df_t *result)
 {
-    double a_f, b_f;
+    double a_f, b_f, tmp;
     df_t y;
     df_to_double(a, &a_f);
     df_to_double(b, &b_f);
-    double_to_df(pow(a_f, b_f), &y);
+    tmp = pow(a_f, b_f);
+    if (tmp == NAN)
+    {
+        df_error(result);
+        return;
+    }
+    double_to_df(tmp, &y);
     *result = y;
 }
 
