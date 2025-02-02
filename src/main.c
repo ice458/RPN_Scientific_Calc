@@ -145,7 +145,7 @@ void config(bool mode_flag, bool disp_flag)
     uint8_t last_key = 255; // ダミー初期値
     // キーが押されたかどうかのフラグ
     bool is_pushed = false;
-
+   
     while (1)
     {
         // クロック周波数を落とす
@@ -155,6 +155,9 @@ void config(bool mode_flag, bool disp_flag)
             ;
         // DFLLをOFF
         OSCCTRL_REGS->OSCCTRL_DFLLCTRL = OSCCTRL_DFLLCTRL_ENABLE(false);
+        
+        // キー読み取り開始
+        TC2_TimerStart();
         // キー読み取りループ
         while (1)
         {
@@ -173,6 +176,8 @@ void config(bool mode_flag, bool disp_flag)
         }
         // オートパワーセーブ用タイマリセット
         TC0_Timer16bitCounterSet(0);
+        // キー読み取りストップ
+        TC2_TimerStop();
 
         // クロック周波数を上げる
         // DFLLをON
