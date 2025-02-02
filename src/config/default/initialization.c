@@ -146,8 +146,6 @@ void SYS_Initialize ( void* data )
 
     SERCOM1_I2C_Initialize();
 
-    EVSYS_Initialize();
-
     SUPC_Initialize();
 
     TC1_TimerInitialize();

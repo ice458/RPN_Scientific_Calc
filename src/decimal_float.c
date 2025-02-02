@@ -531,6 +531,12 @@ void df_add(df_t *a, df_t *b, df_t *result)
 void df_sub(df_t *a, df_t *b, df_t *result)
 {
     df_t tmp = *b;
+    
+    if (df_is_zero(a) && df_is_zero(b))
+    {
+        int_to_df(0, result);
+        return;
+    }
     tmp.sign = !b->sign;
     df_add(a, &tmp, result);
 }
@@ -713,11 +719,12 @@ void df_sqrt(df_t *a, df_t *result)
         return;
     }
 
-    df_t n, tmp, tree, point_five;
+    df_t n, tmp;
     double a_f;
+    df_t point_five = DF_05;
+    df_t three = DF_3;
+
     df_to_double(a, &a_f);
-    double_to_df(0.5, &point_five);
-    int_to_df(3, &tree);
 
     // 初期値の設定
     double_to_df(1.0 / sqrt(a_f), &n);
@@ -726,7 +733,7 @@ void df_sqrt(df_t *a, df_t *result)
     {
         df_mul(&n, &n, &tmp);
         df_mul(a, &tmp, &tmp);
-        df_sub(&tree, &tmp, &tmp);
+        df_sub(&three, &tmp, &tmp);
         df_mul(&point_five, &tmp, &tmp);
         df_mul(&n, &tmp, &n);
     }
@@ -787,6 +794,7 @@ void df_nth_root(df_t *a, df_t *n, df_t *result)
 }
 
 // exp(x)
+// 低い次数から計算しているので誤差が大きい
 void df_exp(df_t *x, df_t *result)
 {
     const uint8_t loop = 30;
@@ -845,8 +853,10 @@ void df_exp(df_t *x, df_t *result)
     }
 
     // 収束速度が落ちるので,e^x=e^2*e^(x-2)を利用して計算する
+    // 2で固定しないで、整数部分と小数部分で分ければいいのでは
     while (df_compare(&xtmp, &th) >= 0)
     {
+        // xtmpが大きすぎると引き算しても値が変わらず、無限ループに陥る
         df_sub(&xtmp, &two, &xtmp); // x-2
         df_mul(&e2, &ex2, &ex2);
     }
@@ -882,6 +892,7 @@ void df_ln(df_t *x, df_t *result)
     if (x->sign)
     {
         df_error(result);
+        return;
     }
 
     const uint8_t loop = 30;

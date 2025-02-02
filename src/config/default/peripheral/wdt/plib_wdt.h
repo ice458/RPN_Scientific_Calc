@@ -1,20 +1,21 @@
 /*******************************************************************************
-  Interface definition of EVSYS PLIB.
+  Watch Dog Timer PLIB.
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_evsys.h
+    plib_wdt.h
 
   Summary:
-    Interface definition of the Event System Plib (EVSYS).
+    Interface definition of WDT PLIB.
 
   Description:
-    This file defines the interface for the EVSYS Plib.
-    It allows user to setup event generators and users.
+    This file defines the interface for the WDT Plib.
+    It allows user to setup timeout duration and restart watch dog timer.
 *******************************************************************************/
 
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
@@ -37,32 +38,70 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
+// DOM-IGNORE-END
 
-#ifndef EVSYS_H    // Guards against multiple inclusion
-#define EVSYS_H
+#ifndef PLIB_WDT_H    // Guards against multiple inclusion
+#define PLIB_WDT_H
 
-#include "device.h"
+// *****************************************************************************
+// *****************************************************************************
+// Section: Included Files
+// *****************************************************************************
+// *****************************************************************************
+
 #include <stdint.h>
+#include <stdbool.h>
 #include <stddef.h>
+#include "device.h"
 
+// DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
- extern "C" {
-#endif
 
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Interface
-// *****************************************************************************
-// *****************************************************************************
-
-
-
-/***************************** EVSYS API *******************************/
-void EVSYS_Initialize( void );
-
-#ifdef __cplusplus // Provide C++ Compatibility
- }
-#endif
+    extern "C" {
 
 #endif
+// DOM-IGNORE-END
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Data Types
+// *****************************************************************************
+// *****************************************************************************
+
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Interface Routines
+// *****************************************************************************
+// *****************************************************************************
+
+void WDT_Enable( void );
+
+void WDT_Disable( void );
+
+void WDT_EnableWindowMode( void );
+
+void WDT_DisableWindowMode( void );
+
+bool WDT_IsEnabled(void);
+
+bool WDT_IsAlwaysOn(void);
+
+bool WDT_IsWindowModeEnabled(void);
+
+void WDT_TimeoutPeriodSet(uint8_t TimeoutPeriod);
+
+void WDT_Clear( void );
+
+void WDT_ClearWithSync( void );
+
+
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
+
+    }
+
+#endif
+// DOM-IGNORE-END
+
+#endif /* PLIB_WDT_H */

@@ -158,6 +158,7 @@ void config(bool mode_flag, bool disp_flag)
         // キー読み取りループ
         while (1)
         {
+            WDT_Clear();
             if (last_key == 255)
             {
                 last_key = 0;
@@ -311,6 +312,10 @@ int main(void)
     // 割り込み周期 600,000msec (10min)
     TC0_TimerCallbackRegister(pdown, (uintptr_t)NULL);
     TC0_TimerStart();
+    
+    // WDT
+    WDT_TimeoutPeriodSet(0x9);// 4秒
+    WDT_Enable();
 
     // LCDの初期化
     AQM1602Y_Initialize();
@@ -370,10 +375,14 @@ int main(void)
             ;
         // DFLLをOFF
         OSCCTRL_REGS->OSCCTRL_DFLLCTRL = OSCCTRL_DFLLCTRL_ENABLE(false);
+        
+        // キー読み取り開始
+        TC2_TimerStart();
 
         // キー読み取りループ
         while (1)
         {
+            WDT_Clear();
             if (last_key == 255)
             {
                 last_key = 0;
@@ -388,6 +397,8 @@ int main(void)
         }
         // オートパワーセーブ用タイマリセット
         TC0_Timer16bitCounterSet(0);
+        // キー読み取りストップ
+        TC2_TimerStop();
 
         // クロック周波数を上げる
         // DFLLをON
@@ -1319,6 +1330,10 @@ int main(void)
                 {
                     int_to_df(0, &stack[0]);
                     push_flag = false;
+                    for (uint8_t i = 0; i < max_inputval_length; i++)
+                    {
+                        inputval[i] = '\0';
+                    }
                 }
                 if (stack[0].sign == 0)
                 {

@@ -14,10 +14,6 @@
          <string>class com.microchip.mcc.harmony.HarmonyModule</string>
       </entry>
       <entry>
-         <string>evsys</string>
-         <string>class com.microchip.mcc.harmony.HarmonyModule</string>
-      </entry>
-      <entry>
          <string>nvmctrl</string>
          <string>class com.microchip.mcc.harmony.HarmonyModule</string>
       </entry>
@@ -67,14 +63,13 @@
         &lt;ElementPosition dnOrder=&quot;0&quot; id=&quot;cmsis&quot; x=&quot;430&quot; y=&quot;60&quot;/&gt;
         &lt;ElementPosition dnOrder=&quot;1&quot; id=&quot;core&quot; x=&quot;330&quot; y=&quot;60&quot;/&gt;
         &lt;ElementPosition dnOrder=&quot;2&quot; id=&quot;dfp&quot; x=&quot;340&quot; y=&quot;20&quot;/&gt;
-        &lt;ElementPosition dnOrder=&quot;3&quot; id=&quot;evsys&quot; x=&quot;180&quot; y=&quot;20&quot;/&gt;
-        &lt;ElementPosition dnOrder=&quot;4&quot; id=&quot;nvmctrl&quot; x=&quot;181&quot; y=&quot;73&quot;/&gt;
-        &lt;ElementPosition dnOrder=&quot;5&quot; id=&quot;pm&quot; x=&quot;560&quot; y=&quot;20&quot;/&gt;
-        &lt;ElementPosition dnOrder=&quot;6&quot; id=&quot;sercom1&quot; x=&quot;720&quot; y=&quot;20&quot;/&gt;
-        &lt;ElementPosition dnOrder=&quot;7&quot; id=&quot;supc&quot; x=&quot;561&quot; y=&quot;100&quot;/&gt;
-        &lt;ElementPosition dnOrder=&quot;8&quot; id=&quot;tc0&quot; x=&quot;330&quot; y=&quot;100&quot;/&gt;
-        &lt;ElementPosition dnOrder=&quot;9&quot; id=&quot;tc1&quot; x=&quot;183&quot; y=&quot;179&quot;/&gt;
-        &lt;ElementPosition dnOrder=&quot;10&quot; id=&quot;tc2&quot; x=&quot;330&quot; y=&quot;180&quot;/&gt;
+        &lt;ElementPosition dnOrder=&quot;3&quot; id=&quot;nvmctrl&quot; x=&quot;181&quot; y=&quot;73&quot;/&gt;
+        &lt;ElementPosition dnOrder=&quot;4&quot; id=&quot;pm&quot; x=&quot;560&quot; y=&quot;20&quot;/&gt;
+        &lt;ElementPosition dnOrder=&quot;5&quot; id=&quot;sercom1&quot; x=&quot;720&quot; y=&quot;20&quot;/&gt;
+        &lt;ElementPosition dnOrder=&quot;6&quot; id=&quot;supc&quot; x=&quot;561&quot; y=&quot;100&quot;/&gt;
+        &lt;ElementPosition dnOrder=&quot;7&quot; id=&quot;tc0&quot; x=&quot;330&quot; y=&quot;100&quot;/&gt;
+        &lt;ElementPosition dnOrder=&quot;8&quot; id=&quot;tc1&quot; x=&quot;183&quot; y=&quot;179&quot;/&gt;
+        &lt;ElementPosition dnOrder=&quot;9&quot; id=&quot;tc2&quot; x=&quot;330&quot; y=&quot;180&quot;/&gt;
       &lt;/ElementPositions&gt;
     &lt;/ComponentGraph&gt;
   &lt;/UserData&gt;
@@ -3877,7 +3872,7 @@
   &lt;core dnOrder=&quot;0&quot; id=&quot;WDT_HEADER&quot;&gt;
     &lt;Attributes dnOrder=&quot;0&quot;&gt;
       &lt;Boolean dnOrder=&quot;0&quot; id=&quot;enabled&quot;&gt;
-        &lt;Value dnOrder=&quot;0&quot;&gt;false&lt;/Value&gt;
+        &lt;Value dnOrder=&quot;0&quot;&gt;true&lt;/Value&gt;
       &lt;/Boolean&gt;
     &lt;/Attributes&gt;
   &lt;/core&gt;
@@ -3890,7 +3885,7 @@
   &lt;core dnOrder=&quot;0&quot; id=&quot;WDT_SOURCE&quot;&gt;
     &lt;Attributes dnOrder=&quot;0&quot;&gt;
       &lt;Boolean dnOrder=&quot;0&quot; id=&quot;enabled&quot;&gt;
-        &lt;Value dnOrder=&quot;0&quot;&gt;false&lt;/Value&gt;
+        &lt;Value dnOrder=&quot;0&quot;&gt;true&lt;/Value&gt;
       &lt;/Boolean&gt;
     &lt;/Attributes&gt;
   &lt;/core&gt;
@@ -3903,7 +3898,7 @@
   &lt;core dnOrder=&quot;0&quot; id=&quot;WDT_SYS_DEF&quot;&gt;
     &lt;Attributes dnOrder=&quot;0&quot;&gt;
       &lt;Boolean dnOrder=&quot;0&quot; id=&quot;enabled&quot;&gt;
-        &lt;Value dnOrder=&quot;0&quot;&gt;false&lt;/Value&gt;
+        &lt;Value dnOrder=&quot;0&quot;&gt;true&lt;/Value&gt;
       &lt;/Boolean&gt;
     &lt;/Attributes&gt;
   &lt;/core&gt;
@@ -3915,7 +3910,7 @@
          <value>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;core&gt;
   &lt;core dnOrder=&quot;0&quot; id=&quot;WDT_USE&quot;&gt;
     &lt;Values dnOrder=&quot;0&quot;&gt;
-      &lt;User dnOrder=&quot;0&quot; value=&quot;false&quot;/&gt;
+      &lt;User dnOrder=&quot;0&quot; value=&quot;true&quot;/&gt;
     &lt;/Values&gt;
   &lt;/core&gt;
 &lt;/core&gt;
@@ -3947,10 +3942,6 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="dfp" name="#&amp;__MCC_Group_Parrent_id"/>
-         <value>__ROOTVIEW</value>
-      </entry>
-      <entry>
-         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="evsys" name="#&amp;__MCC_Group_Parrent_id"/>
          <value>__ROOTVIEW</value>
       </entry>
       <entry>
@@ -7180,7 +7171,7 @@
       </entry>
       <entry>
          <file>..\src\config\default\definitions.h</file>
-         <hash>a64c9ddf46be4daeac11e73026872f556221b0a112d6e75749244b0e7507ea50</hash>
+         <hash>bd2e9d8055786496c3a3c014aba49d15d389d3ddbe6a7286293abcf4d57a01f1</hash>
       </entry>
       <entry>
          <file>..\src\config\default\device.h</file>
@@ -7200,7 +7191,7 @@
       </entry>
       <entry>
          <file>..\src\config\default\initialization.c</file>
-         <hash>691de82a7dff0e7b949587b9edaed1490670fd510be45435549ba5c337d1e4df</hash>
+         <hash>ed449f24ff00501aa4eb7a1cfcceecd3e1f65bf61332afc4cd09c10472fbaa8f</hash>
       </entry>
       <entry>
          <file>..\src\config\default\interrupts.c</file>
@@ -7221,14 +7212,6 @@
       <entry>
          <file>..\src\config\default\peripheral\clock\plib_clock.h</file>
          <hash>721136c42046a932de696b169a84343465a44ea204bae3fb8c620a7778dcbf57</hash>
-      </entry>
-      <entry>
-         <file>..\src\config\default\peripheral\evsys\plib_evsys.c</file>
-         <hash>171913270aa095f1e8ff9192995129ff7bab22e5c793c4223f9046802e69d1e6</hash>
-      </entry>
-      <entry>
-         <file>..\src\config\default\peripheral\evsys\plib_evsys.h</file>
-         <hash>f7d08eb8162f271ce1db384c082586a6624e506aa7f502c64c4ab5a1aadac47d</hash>
       </entry>
       <entry>
          <file>..\src\config\default\peripheral\nvic\plib_nvic.c</file>
@@ -7309,6 +7292,14 @@
       <entry>
          <file>..\src\config\default\peripheral\tc\plib_tc_common.h</file>
          <hash>487b4f489229b8e16b24ab48ddc1f414b095585439f0e10d53b2285fc3979f63</hash>
+      </entry>
+      <entry>
+         <file>..\src\config\default\peripheral\wdt\plib_wdt.c</file>
+         <hash>8141b251001b8b8bb15d7702b42d513005a158b30629d0d2a3d4091ccf646afa</hash>
+      </entry>
+      <entry>
+         <file>..\src\config\default\peripheral\wdt\plib_wdt.h</file>
+         <hash>d4bb429b750e4e2970fe12d9c4eea02d2e0b1f1d30279577033555379f94e1a0</hash>
       </entry>
       <entry>
          <file>..\src\config\default\pin_configurations.csv</file>
