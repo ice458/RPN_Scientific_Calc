@@ -158,6 +158,7 @@
       <itemPath>../src/decimal_float.h</itemPath>
       <itemPath>../src/switch.h</itemPath>
       <itemPath>../src/delay.h</itemPath>
+      <itemPath>../src/precomputed_reciprocal_values.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
