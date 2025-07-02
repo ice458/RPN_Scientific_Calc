@@ -811,7 +811,7 @@ void df_cbrt(df_t *a, df_t *result)
     bool is_negative = x.sign;
     x.sign = 0; // 絶対値で計算
 
-    // --- 初期値の推定 (double を使わない) ---
+    // --- 初期値の推定 ---
     df_t n = DF_1; // 推定値 y_n
     n.sign = 0;    // 正の値で開始
 
@@ -844,7 +844,7 @@ void df_cbrt(df_t *a, df_t *result)
 
     df_t previous_n = DF_0; // 収束判定用
 
-    // 反復回数の上限 (安全のため)
+    // 反復回数の上限
     const int max_iterations = DECIMAL_FLOAT_MANTISSA_SIZE + 5; // df_inv より少し多めに
 
     for (int i = 0; i < max_iterations; ++i)
@@ -860,7 +860,6 @@ void df_cbrt(df_t *a, df_t *result)
         // term2 = a / y_n^2 (ゼロ除算チェック)
         if (df_is_zero(&n_squared))
         {
-            // 通常ここには来ないはずだが、念のためエラー処理
             df_error(result);
             return;
         }
@@ -879,7 +878,7 @@ void df_cbrt(df_t *a, df_t *result)
         epsilon.exponent = n.exponent - DECIMAL_FLOAT_MANTISSA_SIZE - 1;
         if (df_compare(&tmp, &epsilon) <= 0)
         {
-            break; // 収束
+            break;
         }
     }
 
@@ -1127,7 +1126,7 @@ void df_ln(df_t *x, df_t *result)
     const int max_iterations = 100;
     for (int32_t i = 3, iter_count = 0; iter_count < max_iterations; i += 2, ++iter_count)
     {
-        // term = term * y^2 (term は y^i になります)
+        // term = term * y^2
         df_mul(&term, &y_squared, &term);
 
         // i_df = i (ループカウンタを df_t に変換)
@@ -1154,7 +1153,7 @@ void df_ln(df_t *x, df_t *result)
             }
             else
             {
-                break; // 収束したと判断
+                break;
             }
         }
         else
@@ -1351,11 +1350,10 @@ void df_pow10(df_t *x, df_t *result)
             df_pow_int(&ten, n, result);
             return;
         }
-        // is_integer が false になった場合はフォールバック
     }
 
     // 一般的なケース: 10^x = e^(x * ln(10))
-    df_t ln10 = DF_LN10; // decimal_float.h で定義されている定数を使用
+    df_t ln10 = DF_LN10;
     df_t x_ln10;
 
     // x * ln(10) を計算
@@ -1560,7 +1558,7 @@ void df_asin(df_t *a, df_t *result)
         result_is_negative = true;
     }
 
-    // 4. 収束高速化 (オプション): |x| > 1/sqrt(2) の場合
+    // 4. 収束高速化: |x| > 1/sqrt(2) の場合
     // asin(x) = pi/2 - asin(sqrt(1-x^2)) を利用
     // 1/sqrt(2) ~= 0.707
     df_t one_div_sqrt2 = {0, {4, 2, 5, 7, 4, 5, 6, 8, 1, 1, 8, 7, 6, 0, 1, 7, 0, 7}, -1}; // 事前計算値
@@ -1618,7 +1616,7 @@ void df_asin(df_t *a, df_t *result)
         diff.sign = 0;                    // 絶対値
         if (df_compare(&diff, &epsilon) <= 0)
         {
-            break; // 収束
+            break;
         }
     }
 
@@ -1778,10 +1776,8 @@ void df_atan(df_t *a, df_t *result)
     df_add(&one, &x_squared, &one_plus_x_squared); // 1 + x^2
     df_sqrt(&one_plus_x_squared, &sqrt_val);       // sqrt(1 + x^2)
 
-    // sqrt_val がゼロになることは、xが実数である限り通常ないはずだが念のため
     if (df_is_zero(&sqrt_val))
     {
-        // エラー処理または無限大のような特殊な値を返すことを検討
         df_error(result);
         return;
     }
