@@ -10,3 +10,6 @@
 *.X/_build
 *.X/.vscode
 *.X/cmale
+_build/
+.vscode/
+cmake/
