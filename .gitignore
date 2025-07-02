@@ -7,3 +7,6 @@
 *.X/debug
 *.X/dist
 *.X/.generated_files
+*.X/_build
+*.X/.vscode
+*.X/cmale
