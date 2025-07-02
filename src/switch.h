@@ -44,6 +44,7 @@ extern "C" {
 
     uint8_t key_read();
     void init_sw();
+    void clear_key();
 
 #ifdef	__cplusplus
 }
