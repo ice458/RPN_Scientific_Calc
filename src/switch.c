@@ -4,8 +4,8 @@ volatile uint8_t key = 0;
 
 void dynamic()
 {
-    static uint8_t sel = 0;
-    static uint8_t counter = 0;
+    static volatile uint8_t sel = 0;
+    static volatile uint8_t counter = 0;
     uint8_t tmp;
 
     switch (sel)
@@ -85,12 +85,18 @@ void dynamic()
 
 uint8_t key_read()
 {
-    return key;
+    uint8_t temp_key;
+    __disable_irq();
+    temp_key = key;
+    __enable_irq();
+    return temp_key;
 }
 
 void clear_key()
 {
+    __disable_irq();
     key = 0;
+    __enable_irq();
 }
 
 void init_sw()

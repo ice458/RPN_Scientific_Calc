@@ -128,6 +128,8 @@ void after_operation(char *inputval, uint8_t *inputval_len, uint8_t *pos_E,
 // クロック周波数制御
 void set_low_frequency_clock()
 {
+    while(SERCOM1_I2C_IsBusy());
+    delay_ms(1);
     // GCLK0をOSCULP32Kに変更
     GCLK_REGS->GCLK_GENCTRL[0] = GCLK_GENCTRL_DIV(1U) | GCLK_GENCTRL_SRC(3U) | GCLK_GENCTRL_GENEN_Msk;
     while ((GCLK_REGS->GCLK_SYNCBUSY & GCLK_SYNCBUSY_GENCTRL0_Msk) == GCLK_SYNCBUSY_GENCTRL0_Msk)
@@ -358,6 +360,7 @@ void config(bool mode_flag, bool disp_flag)
                 }
                 AQM1602Y_Print(str, 16);
             }
+            delay_ms(10);
         }
     }
 }
@@ -771,9 +774,9 @@ bool scientific_constants_menu(bool *push_flag, char *inputval, uint8_t group)
             AQM1602Y_Print("                ", 16);
             AQM1602Y_Corsor_YX(1, 0);
             AQM1602Y_Print((char *)constants[group_offset + selected].name, 16);
+                    
+            delay_ms(10);
         }
-
-        delay_ms(5);
     }
 }
 
@@ -1661,11 +1664,11 @@ int main(void)
                 }
                 AQM1602Y_Print(str, 16);
             }
+            
+            // I2CはDFLL48Mをクロック源としている。
+            // I2C通信中にクロックを無効にしないようにするため待機する
+            delay_ms(10);
         }
-
-        // I2CはDFLL48Mをクロック源としている。
-        // I2C通信中にクロックを無効にしないようにするため待機する
-        delay_ms(5);
     }
     return (EXIT_FAILURE);
 }
