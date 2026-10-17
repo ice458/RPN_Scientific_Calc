@@ -7,6 +7,9 @@ For more information, please visit [this site.](https://ice458.wordpress.com/rpn
 
 <img src="calc.png" width="400">  
 
+## Demo
+<img src="demo.gif" alt="Demo of the RPN Scientific Calculator">  
+
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
